@@ -3,6 +3,9 @@ package com.example.composepractice
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,10 +19,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -74,9 +76,36 @@ class MainActivity : ComponentActivity() {
                     //StyledText()
                     //ColorStateExample(Modifier.fillMaxSize())
                     //SnackBarExample(Modifier.fillMaxSize())
-                    ListExample(Modifier.fillMaxSize())
+                    //ListExample(Modifier.fillMaxSize())
+                    AnimationExample()
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun AnimationExample(modifier: Modifier = Modifier) {
+    var sizeState by remember {
+        mutableStateOf(200.dp)
+    }
+
+    val size by animateDpAsState(
+        targetValue = sizeState,
+        label = "",
+        animationSpec = spring(Spring.DampingRatioMediumBouncy)
+    )
+
+    Box(
+        modifier = modifier
+            .size(size)
+            .background(Color.Red),
+        contentAlignment = Alignment.Center
+    ) {
+        Button(onClick = {
+            sizeState += 50.dp
+        }) {
+            Text(text = "increase size")
         }
     }
 }
@@ -87,9 +116,9 @@ fun ListExample(modifier: Modifier = Modifier) {
         items(5000) {
             Text(
                 text = "Item $it",
-                fontSize= 24.sp,
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                textAlign= TextAlign.Center,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 18.dp)
